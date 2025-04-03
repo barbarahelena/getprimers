@@ -23,6 +23,10 @@
 3. Optional: pull reference genomes if working with bacterial proteins, using [NCBI-genome-download](https://github.com/kblin/ncbi-genome-download)
 4. Check specificity of primers using [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) against reference genomes
 
+<picture>
+    <img alt="getprimersworkflow" src="docs/images/getprimers.drawio.png">
+</picture>
+
 ## Usage
 
 > [!NOTE]
