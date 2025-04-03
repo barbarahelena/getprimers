@@ -1,7 +1,7 @@
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/nf-core-getprimers_logo_dark.png">
-    <img alt="nf-core/getprimers" src="docs/images/nf-core-getprimers_logo_light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/getprimerslogodark.png">
+    <img alt="getprimers" src="docs/images/getprimerslogo.png">
   </picture>
 </h1>
 
@@ -13,87 +13,55 @@
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/getprimers)
-
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23getprimers-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/getprimers)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-**nf-core/getprimers** is a bioinformatics pipeline that ...
+**getprimers** is a bioinformatics pipeline that generates primers and checks the quality and specificity.
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
-
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+1. Design primers using [Primer3](https://github.com/primer3-org/primer3)
+2. Check quality of primers using [Primer3](https://github.com/primer3-org/primer3)
+3. Optional: pull reference genomes if working with bacterial proteins, using [NCBI-genome-download](https://github.com/kblin/ncbi-genome-download)
+4. Check specificity of primers using [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) against reference genomes
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
 First, prepare a samplesheet with your input data that looks as follows:
 
-`samplesheet.csv`:
+`samplesheet_bacteria.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+protein_ID,taxonomy,sequence
+
 ```
-
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
+Each row represents a protein.
 
 Now, you can run the pipeline using:
 
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
-
 ```bash
-nextflow run nf-core/getprimers \
+nextflow run getprimers \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
+   --genome hg38 \
    --outdir <OUTDIR>
 ```
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
-For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/getprimers/usage) and the [parameter documentation](https://nf-co.re/getprimers/parameters).
+For more details and further functionality, please refer to the [usage documentation](https://github.com/barbarahelena/getprimers/tree/TEMPLATE/docs/usage.md) and the [parameter documentation](https://github.com/barbarahelena/getprimers/tree/TEMPLATE/docs/parameters.md).
 
 ## Pipeline output
 
-To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/getprimers/results) tab on the nf-core website pipeline page.
-For more details about the output files and reports, please refer to the
-[output documentation](https://nf-co.re/getprimers/output).
+To see the results of an example test run with a full size dataset refer to the [results](https://github.com/barbarahelena/getprimers/tree/TEMPLATE/docs/results.md) documentation. There is also a more specific [output](https://github.com/barbarahelena/getprimers/tree/TEMPLATE/docs/output.md) doc.
 
 ## Credits
 
-nf-core/getprimers was originally written by barbarahelena.
-
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
-
-## Contributions and Support
-
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
-
-For further information or help, don't hesitate to get in touch on the [Slack `#getprimers` channel](https://nfcore.slack.com/channels/getprimers) (you can join with [this invite](https://nf-co.re/join/slack)).
+getprimers was written by me, but I tried to follow the nf-core template as much as possible.
 
 ## Citations
-
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-core/getprimers for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
