@@ -15,7 +15,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { GETPRIMERS  } from './workflows/getprimers'
+include { GETPRIMERS              } from './workflows/getprimers'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_getprimers_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_getprimers_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_getprimers_pipeline'
@@ -53,8 +53,6 @@ workflow NFCORE_GETPRIMERS {
     GETPRIMERS (
         samplesheet
     )
-    emit:
-    multiqc_report = GETPRIMERS.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,7 +79,7 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_GETPRIMERS (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.ch_samplesheet
     )
     //
     // SUBWORKFLOW: Run completion tasks
@@ -92,8 +90,7 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        params.hook_url,
-        NFCORE_GETPRIMERS.out.multiqc_report
+        params.hook_url
     )
 }
 

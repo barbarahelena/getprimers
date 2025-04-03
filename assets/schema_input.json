@@ -7,27 +7,34 @@
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
+            "id": {
+                "meta": ["id"],
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_]+$",
+                "errorMessage": "ID must be provided and can only contain letters, numbers, and underscores.",
+                "description": "Unique identifier for the sample."
+            },
+            "species": {
+                "meta": ["species"],
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["id"]
+                "errorMessage": "Species name must be provided and cannot contain spaces.",
+                "description": "Species name associated with the sample."
             },
-            "fastq_1": {
+            "assembly": {
+                "meta": ["assembly"],
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+$",
+                "errorMessage": "Assembly ID must be provided and cannot contain spaces.",
+                "description": "Assembly ID for the reference genome."
             },
-            "fastq_2": {
+            "sequence": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+$",
+                "errorMessage": "Sequence must be provided and cannot contain spaces.",
+                "description": "Target sequence for primer design."
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["id","sequence"]
     }
 }

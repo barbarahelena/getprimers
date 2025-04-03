@@ -102,40 +102,6 @@ def softwareVersionsToYAML(ch_versions) {
 }
 
 //
-// Get workflow summary for MultiQC
-//
-def paramsSummaryMultiqc(summary_params) {
-    def summary_section = ''
-    summary_params
-        .keySet()
-        .each { group ->
-            def group_params = summary_params.get(group)
-            // This gets the parameters of that particular group
-            if (group_params) {
-                summary_section += "    <p style=\"font-size:110%\"><b>${group}</b></p>\n"
-                summary_section += "    <dl class=\"dl-horizontal\">\n"
-                group_params
-                    .keySet()
-                    .sort()
-                    .each { param ->
-                        summary_section += "        <dt>${param}</dt><dd><samp>${group_params.get(param) ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>\n"
-                    }
-                summary_section += "    </dl>\n"
-            }
-        }
-
-    def yaml_file_text = "id: '${workflow.manifest.name.replace('/', '-')}-summary'\n" as String
-    yaml_file_text     += "description: ' - this information is collected when the pipeline is started.'\n"
-    yaml_file_text     += "section_name: '${workflow.manifest.name} Workflow Summary'\n"
-    yaml_file_text     += "section_href: 'https://github.com/${workflow.manifest.name}'\n"
-    yaml_file_text     += "plot_type: 'html'\n"
-    yaml_file_text     += "data: |\n"
-    yaml_file_text     += "${summary_section}"
-
-    return yaml_file_text
-}
-
-//
 // ANSII colours used for terminal logging
 //
 def logColours(monochrome_logs=true) {
@@ -203,30 +169,10 @@ def logColours(monochrome_logs=true) {
     return colorcodes
 }
 
-// Return a single report from an object that may be a Path or List
-//
-def getSingleReport(multiqc_reports) {
-    if (multiqc_reports instanceof Path) {
-        return multiqc_reports
-    } else if (multiqc_reports instanceof List) {
-        if (multiqc_reports.size() == 0) {
-            log.warn("[${workflow.manifest.name}] No reports found from process 'MULTIQC'")
-            return null
-        } else if (multiqc_reports.size() == 1) {
-            return multiqc_reports.first()
-        } else {
-            log.warn("[${workflow.manifest.name}] Found multiple reports from process 'MULTIQC', will use only one")
-            return multiqc_reports.first()
-        }
-    } else {
-        return null
-    }
-}
-
 //
 // Construct and send completion email
 //
-def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs=true, multiqc_report=null) {
+def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs=true) {
 
     // Set up the e-mail variables
     def subject = "[${workflow.manifest.name}] Successful: ${workflow.runName}"
@@ -273,9 +219,6 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     email_fields['projectDir']   = workflow.projectDir
     email_fields['summary']      = summary << misc_fields
 
-    // On success try attach the multiqc report
-    def mqc_report = getSingleReport(multiqc_report)
-
     // Check if we are only sending emails on failure
     def email_address = email
     if (!email && email_on_fail && !workflow.success) {
@@ -294,8 +237,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     def email_html    = html_template.toString()
 
     // Render the sendmail template
-    def max_multiqc_email_size = (params.containsKey('max_multiqc_email_size') ? params.max_multiqc_email_size : 0) as MemoryUnit
-    def smail_fields           = [email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "${workflow.projectDir}", mqcFile: mqc_report, mqcMaxSize: max_multiqc_email_size.toBytes()]
+    def smail_fields           = [email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "${workflow.projectDir}"]
     def sf                     = new File("${workflow.projectDir}/assets/sendmail_template.txt")
     def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html          = sendmail_template.toString()
