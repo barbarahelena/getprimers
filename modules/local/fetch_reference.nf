@@ -1,7 +1,7 @@
 process FETCH_REFERENCE_GENOME {
-    tag "${meta.species}"
+    tag "${metaspecies}"
     label 'process_low'
-    storeDir "reference_genomes/"
+    storeDir "reference_genomes/${metaspecies.replaceAll(" ", "_")}"
 
     conda "bioconda::ncbi-genome-download=0.3.3 conda-forge::python=3.13.2 conda-forge::gzip=1.13"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -9,19 +9,20 @@ process FETCH_REFERENCE_GENOME {
         'community.wave.seqera.io/library/ncbi-genome-download_gzip_python:d9744426f7d491f4'}"
 
     input:
-    tuple val(meta), val(gene_seq)
+    val(metaspecies)
     path(taxdb)
 
     output:
-    tuple val(meta), path("${meta.species}/*.fna")     , emit: reference
-    path "versions.yml"                                , emit: versions
+    tuple val(metaspecies), path("*.fna")     , emit: reference
+    path "versions.yml"                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args           = task.ext.args ?: ''
-    def species        = meta.species.replaceAll("_", " ")
+    def species        = metaspecies.replaceAll("_", " ")
+    def species_rep    = metaspecies.replaceAll(" ", "_")
     """
     # Set a custom cache directory
     export XDG_CACHE_HOME="cache"
@@ -61,12 +62,11 @@ process FETCH_REFERENCE_GENOME {
     EOF
 
     mytaxid=\$(head -n1 mytaxa.txt)
-    # Use ncbi-genome-download with the generated taxid list
+
     ncbi-genome-download ${args} --formats fasta --taxids mytaxa.txt --output-folder ./ bacteria
 
-    mkdir -p ${meta.species}
-    mv refseq/bacteria/*/*.fna.gz ${meta.species}/
-    gunzip ${meta.species}/*.fna.gz
+    mv refseq/bacteria/*/*.fna.gz .
+    gunzip *.fna.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
