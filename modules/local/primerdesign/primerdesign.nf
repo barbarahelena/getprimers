@@ -31,22 +31,6 @@ process PRIMER_DESIGN {
 
     script:
     def sequence = gene_seq.first().toLowerCase()
-    def TF_FOW = tf_fow ?: 'gaaattaatacgactcactatagggagaccacaacggtttccctctagaaataattttgtttaagaaggagatatacat'
-    def TF_REV_COMP = tf_rev ?: 'aggcttacctaatgccaactttgtacaagaaagctg'
-    def PRIMER_OPT_SIZE = primer_opt_size ?: 20
-    def PRIMER_MIN_SIZE = primer_min_size ?: PRIMER_OPT_SIZE - 2
-    def PRIMER_MAX_SIZE = primer_max_size ?: PRIMER_OPT_SIZE + 7
-    def PRIMER_OPT_TM = primer_opt_tm ?: 60
-    def PRIMER_MIN_TM = primer_min_tm ?: PRIMER_OPT_TM - 3
-    def PRIMER_MAX_TM = primer_max_tm ?: PRIMER_OPT_TM + 3
-    def PRIMER_PAIR_MAX_DIFF_TM = primer_pair_max_diff_tm ?: 3.0
-    def PRIMER_PRODUCT_SIZE_RANGE = primer_product_size_range ?: '[[75,150]]'
-    def PRIMER_TASK = primer_task ?: 'generic'
-    def PRIMER_MIN_GC = primer_min_gc ?: 30
-    def PRIMER_MAX_GC = primer_max_gc ?: 70
-    def PRIMER_PICK_LEFT_PRIMER = primer_n_left ?: 1
-    def PRIMER_PICK_RIGHT_PRIMER = primer_n_right ?: 1
-
     """
     python3 <<EOF
     import os
@@ -56,8 +40,8 @@ process PRIMER_DESIGN {
     from Bio.Seq import Seq
 
     # Define universal primer sequences
-    TF_FOW = "${TF_FOW}"
-    TF_REV_COMP = "${TF_REV_COMP}"
+    TF_FOW = "${tf_fow}"
+    TF_REV_COMP = "${tf_rev}"
 
     # Configure primer3 parameters
     primers = primer3.design_primers(
@@ -66,19 +50,19 @@ process PRIMER_DESIGN {
             'SEQUENCE_TEMPLATE': "${sequence}"
         },
         {
-            'PRIMER_TASK': "${PRIMER_TASK}",
-            'PRIMER_PICK_LEFT_PRIMER': ${PRIMER_PICK_LEFT_PRIMER},
-            'PRIMER_PICK_RIGHT_PRIMER': ${PRIMER_PICK_RIGHT_PRIMER},
-            'PRIMER_OPT_SIZE': ${PRIMER_OPT_SIZE},
-            'PRIMER_MIN_SIZE': ${PRIMER_MIN_SIZE},
-            'PRIMER_MAX_SIZE': ${PRIMER_MAX_SIZE},
-            'PRIMER_OPT_TM': ${PRIMER_OPT_TM},
-            'PRIMER_MIN_TM': ${PRIMER_MIN_TM},
-            'PRIMER_MAX_TM': ${PRIMER_MAX_TM},
-            'PRIMER_MIN_GC': ${PRIMER_MIN_GC},
-            'PRIMER_MAX_GC': ${PRIMER_MAX_GC},
-            'PRIMER_PAIR_MAX_DIFF_TM': ${PRIMER_PAIR_MAX_DIFF_TM},
-            'PRIMER_PRODUCT_SIZE_RANGE': ${PRIMER_PRODUCT_SIZE_RANGE}
+            'PRIMER_TASK': "${primer_task}",
+            'PRIMER_PICK_LEFT_PRIMER': ${primer_n_left},
+            'PRIMER_PICK_RIGHT_PRIMER': ${primer_n_right},
+            'PRIMER_OPT_SIZE': ${primer_opt_size},
+            'PRIMER_MIN_SIZE': ${primer_min_size},
+            'PRIMER_MAX_SIZE': ${primer_max_size},
+            'PRIMER_OPT_TM': ${primer_opt_tm},
+            'PRIMER_MIN_TM': ${primer_min_tm},
+            'PRIMER_MAX_TM': ${primer_max_tm},
+            'PRIMER_MIN_GC': ${primer_min_gc},
+            'PRIMER_MAX_GC': ${primer_max_gc},
+            'PRIMER_PAIR_MAX_DIFF_TM': ${primer_pair_max_diff_tm},
+            'PRIMER_PRODUCT_SIZE_RANGE': ${primer_product_size_range}
         }
     )
 
@@ -103,7 +87,7 @@ process PRIMER_DESIGN {
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        primer3: \$(primer3_core --version 2>&1 | head -n 1 | sed 's/^.*release //')
+        primer3: 2.0.3
         biopython: \$(python -c "import Bio; print(Bio.__version__)")
         python: \$(python --version | sed 's/Python //')
     END_VERSIONS

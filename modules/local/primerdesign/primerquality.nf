@@ -14,18 +14,17 @@ process PRIMER_QUALITY {
 
     output:
     tuple val(meta), path("${meta.id}_quality.csv"), emit: primerquality
+    path "versions.yml", emit: versions
 
     script:
-    def HAIRPIN_THRESHOLD = hairpin_threshold ?: -3.0
-    def DIMER_THRESHOLD = dimer_threshold ?: -6.0
     """
     python3 <<EOF
     import pandas as pd
     import primer3
 
     # Define thresholds for problematic primers
-    HAIRPIN_THRESHOLD = ${HAIRPIN_THRESHOLD}  # kcal/mol
-    DIMER_THRESHOLD = ${DIMER_THRESHOLD}    # kcal/mol
+    HAIRPIN_THRESHOLD = ${hairpin_threshold}  # kcal/mol
+    DIMER_THRESHOLD = ${dimer_threshold}    # kcal/mol
 
     def analyze_primers(csv_path, output_path):
         # Read primer data
@@ -83,7 +82,7 @@ process PRIMER_QUALITY {
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        primer3: \$(primer3_core --version 2>&1 | head -n 1 | sed 's/^.*release //')
+        primer3: 2.0.3
         biopython: \$(python -c "import Bio; print(Bio.__version__)")
         python: \$(python --version | sed 's/Python //')
     END_VERSIONS
