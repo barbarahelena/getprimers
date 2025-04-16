@@ -17,8 +17,8 @@
             "species": {
                 "meta": ["species"],
                 "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Species name must be provided and cannot contain spaces.",
+                "pattern": "^.+$",
+                "errorMessage": "Species name must be provided.",
                 "description": "Species name associated with the sample."
             },
             "assembly": {
