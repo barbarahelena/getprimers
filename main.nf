@@ -1,11 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/getprimers
+    getprimers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/getprimers
-    Website: https://nf-co.re/getprimers
-    Slack  : https://nfcore.slack.com/channels/getprimers
+    Github : https://github.com/barbarahelena/getprimers
 ----------------------------------------------------------------------------------------
 */
 
@@ -40,7 +38,7 @@ params.fasta = getGenomeAttribute('fasta')
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
-workflow NFCORE_GETPRIMERS {
+workflow PIPELINE_GETPRIMERS {
 
     take:
     samplesheet // channel: samplesheet read in from --input
@@ -78,7 +76,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_GETPRIMERS (
+    PIPELINE_GETPRIMERS (
         PIPELINE_INITIALISATION.out.ch_samplesheet
     )
     //
