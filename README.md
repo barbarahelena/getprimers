@@ -5,10 +5,6 @@
   </picture>
 </h1>
 
-[![GitHub Actions CI Status](https://github.com/nf-core/getprimers/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/getprimers/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/getprimers/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/getprimers/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/getprimers/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
-[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
-
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
@@ -22,6 +18,7 @@
 2. Check quality of primers using [Primer3](https://github.com/primer3-org/primer3)
 3. Optional: pull reference genomes if working with bacterial proteins, using [NCBI-genome-download](https://github.com/kblin/ncbi-genome-download)
 4. Check specificity of primers using [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) against reference genomes
+5. Process results: select primers that were not flagged and merge one primer set per protein into one output table.
 
 <picture>
     <img alt="getprimersworkflow" src="docs/images/getprimers.drawio.png">
